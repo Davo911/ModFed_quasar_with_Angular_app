@@ -11,7 +11,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
 const { configure } = require('quasar/wrappers');
-
+const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
+const dependencies = require('./package.json').dependencies;
+const path = require('path');
 module.exports = configure(function (ctx) {
   return {
     // https://v2.quasar.dev/quasar-cli-webpack/supporting-ts
@@ -54,7 +56,22 @@ module.exports = configure(function (ctx) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-build
     build: {
       vueRouterMode: 'hash', // available values: 'hash', 'history'
-
+      extendWebpack(cfg) {
+        cfg.entry = path.resolve(__dirname, './.quasar/main.js');
+        cfg.plugins.push(
+          new ModuleFederationPlugin({
+            name: 'app_general',
+            filename: 'remoteEntry.js',
+            exposes: {},
+            remotes: {
+              app_exposes: 'app_exposes@http://localhost:3001/remoteEntry.js',
+            },
+            shared: {
+              ...dependencies,
+            },
+          })
+        );
+      },
       // transpile: false,
       // publicPath: '/',
 
@@ -74,7 +91,9 @@ module.exports = configure(function (ctx) {
 
       // https://v2.quasar.dev/quasar-cli-webpack/handling-webpack
       // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
-      // chainWebpack (/* chain */) {}
+      chainWebpack(chain) {
+        chain.optimization.delete('splitChunks');
+      },
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-devServer
