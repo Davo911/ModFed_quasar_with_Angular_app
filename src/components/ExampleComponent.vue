@@ -9,7 +9,6 @@
     <p>Count: {{ todoCount }} / {{ meta.totalCount }}</p>
     <p>Active: {{ active ? 'yes' : 'no' }}</p>
     <p>Clicks on todos: {{ clickCount }}</p>
-    <router-link to="/angular-app">Go to Angular App</router-link>
   </div>
 </template>
 

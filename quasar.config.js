@@ -34,7 +34,7 @@ module.exports = configure(function (ctx) {
             remotes: {
               app_exposes: 'app_exposes@http://localhost:3001/remoteEntry.js',
               angular_micro_app:
-                'angular_micro_app@http://localhost:8080/remoteEntry.js',
+                'angular_micro_app@http://localhost:3002/remoteEntry.js',
             },
             shared: {
               ...dependencies,
