@@ -1,23 +1,14 @@
-const { shareAll } = require('@angular-architects/module-federation/webpack');
-const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
+const { shareAll, withModuleFederationPlugin } = require('@angular-architects/module-federation/webpack');
 
-module.exports = {
-  output: {
-    uniqueName: 'angular_micro_app',
+module.exports = withModuleFederationPlugin({
+
+  name: 'micro-angular1',
+
+  exposes: {
+    './Component': './src/app/test-ng-component/test-ng-component.component.ts',
   },
-  optimization: {
-    runtimeChunk: false,
+  shared: {
+    ...shareAll({ singleton: true, strictVersion: true, requiredVersion: 'auto' }),
   },
-  plugins: [
-    new ModuleFederationPlugin({
-      name: 'angular_micro_app',
-      filename: 'remoteEntry.js',
-      exposes: {
-        './Component': './src/app/test-ng-component/test-ng-component.component.ts',
-      },
-      shared: {
-        ...shareAll({ singleton: true, strictVersion: true, requiredVersion: 'auto' }),
-      },
-    }),
-  ],
-};
+
+});
