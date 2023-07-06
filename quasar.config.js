@@ -2,6 +2,8 @@ const { configure } = require('quasar/wrappers');
 const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
 const dependencies = require('./package.json').dependencies;
 const path = require('path');
+const ESLintPlugin = require('eslint-webpack-plugin')
+
 module.exports = configure(function (ctx) {
   return {
     supportTS: {
@@ -32,9 +34,7 @@ module.exports = configure(function (ctx) {
             filename: 'remoteEntry.js',
             exposes: {},
             remotes: {
-              app_exposes: 'app_exposes@http://localhost:3001/remoteEntry.js',
-              angular_micro_app:
-                'angular_micro_app@http://localhost:3002/remoteEntry.js',
+              app_exposes: 'app_exposes@http://localhost:4201/remoteEntry.js',
             },
             shared: {
               ...dependencies,
@@ -44,6 +44,8 @@ module.exports = configure(function (ctx) {
       },
 
       chainWebpack(chain) {
+        chain.plugin('eslint-webpack-plugin')
+          .use(ESLintPlugin, [{ extensions: [ 'js', 'vue' ] }])
         chain.optimization.delete('splitChunks');
       },
     },
@@ -70,7 +72,10 @@ module.exports = configure(function (ctx) {
       prodPort: 3000,
 
       maxAge: 1000 * 60 * 60 * 24 * 30,
-
+      chainWebpackWebserver (chain) {
+        chain.plugin('eslint-webpack-plugin')
+          .use(ESLintPlugin, [{ extensions: [ 'js' ] }])
+      },
       middlewares: [
         ctx.prod ? 'compression' : '',
         'render', // keep this as last one
@@ -80,7 +85,10 @@ module.exports = configure(function (ctx) {
     pwa: {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
-
+      chainWebpackCustomSW (chain) {
+        chain.plugin('eslint-webpack-plugin')
+          .use(ESLintPlugin, [{ extensions: [ 'js' ] }])
+      },
       manifest: {
         name: 'The Vue Host',
         short_name: 'The Vue Host',

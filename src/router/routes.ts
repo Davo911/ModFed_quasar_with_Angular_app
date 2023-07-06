@@ -14,14 +14,7 @@ const routes: RouteRecordRaw[] = [
     component: () => import('pages/ErrorNotFound.vue'),
   },
 
-  {
-    path: '/angular-app',
-    component: () =>
-      import(
-        /* webpackShareScope: "angular_micro_app" */
-        '../angular-micro-app/main'
-      ),
-  },
+
 ];
 
 export default routes;
