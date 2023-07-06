@@ -6,6 +6,7 @@ const ESLintPlugin = require('eslint-webpack-plugin')
 
 module.exports = configure(function (ctx) {
   return {
+    publicPath: 'http://localhost:8080/',
     supportTS: {
       tsCheckerConfig: {
         eslint: {
@@ -38,6 +39,11 @@ module.exports = configure(function (ctx) {
             },
             shared: {
               ...dependencies,
+              vue: {
+                eager: true,
+                singleton: true,
+                strictVersion: true,
+              },
             },
           })
         );

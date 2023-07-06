@@ -2,7 +2,7 @@ const { shareAll, withModuleFederationPlugin } = require('@angular-architects/mo
 
 module.exports = withModuleFederationPlugin({
 
-  name: 'micro-angular1',
+  name: 'angular-remote1',
 
   exposes: {
     './Component': './src/app/test-ng-component/test-ng-component.component.ts',
